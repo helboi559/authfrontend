@@ -3,10 +3,12 @@ import { useState } from 'react'
 import { registerUser,loginUser } from '../Auth'
 import { useNavigate } from 'react-router-dom'
 
+// console.log(registerUser)
 const RegistrationPage = (props) => {
   const[username,setUsername]= useState('')
   const[password,setPassword]= useState('')
   const navigate = useNavigate() 
+  
   return (
     <>
       <label>UserName</label>
@@ -20,8 +22,9 @@ const RegistrationPage = (props) => {
       <button onClick={async()=>{
         registerUser(username,password)
         await props.setIsAuthLoading(true)
+        console.log()
         if (loginUser) {
-          props,setIsAuthLoading(false)
+          props.setIsAuthLoading(false)
           navigate('/')
         }
       }}>Signup</button>

@@ -160,30 +160,57 @@
       setUserToken(userToken)
     }, [isAuthLoading])
   * Update the return JSX in <NavBar /> to be the following:
-    * <div>
+    ```html
+    <div>
         <nav>
-          <h3>NavBar</h3>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            {!userToken && 
+        <h3>NavBar</h3>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          {!userToken && (
+            <>
               <li>
                 <Link to="/login">Login</Link>
               </li>
               <li>
                 <Link to="/registration">Registration</Link>
               </li>
-            }
-          </ul>
-          {userToken && 
-            <span><strong>You Are Logged In</strong></span>
-            <button onClick={()=>{
-              logoutUser()
-            }}>Logout</button>
-          }
-        </nav>
-        <Outlet />
-      </div>
+              </>
+          )}
+        </ul>
+        {userToken && (
+          <>
+            <span>
+              <strong>You Are Logged In</strong>
+            </span>
+            <button
+              onClick={() => {
+                props.setIsAuthLoading(true)
+                logoutUser();
+                props.setIsAuthLoading(false)
+              }}
+            >
+              Logout
+            </button>
+          </>
+        )}
+      </nav>
+        <Outlet/>
+    </div>
+    ```
 
 * Note: If all the above was implemented correctly, you should be able to do the entire auth flow from the front end. Register a user, login as that user and logout from that user. You should also see the NavBar update dynamically based upon your login status.
+
+
+-----
+## 3B
+Requirements (Front-End - Secret Message)
+In , implement the following:
+Add a new state variable called secretMessage
+Import getUserToken from ./src/Auth.js
+Add a new function called requestSecretMessage in the body:
+const requestSecretMessage = async () => { const url = ${process.env.REACT_APP_URL_ENDPOINT}/auth/validate-token; const response = await fetch(url, { method: "GET", headers: { "Content-Type": "application/json", [process.env.REACT_APP_TOKEN_HEADER_KEY]: getUserToken(), }, }); const responseJSON = await response.json(); setSecretMessage(responseJSON.message) return responseJSON; };
+Note: We are sending the users token back in the headers of the request. This is another layer of added security for our application.
+Add a new button called Get Message and add an onClick handler that calls the requestSecretMessage function
+If everything was set up properly, you should be able to register a new user with an email ending in @codeimmersives.com and see the secret message appear on the Home Page.
